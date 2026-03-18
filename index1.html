@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Smart Garbage Detection System</title>
+    <a href="demo.html">
+    <button style="padding:15px; font-size:20px;">🚀 View Live Demo</button>
+</a>
+<a href="dashboard.html">
+  <button style="padding:15px;font-size:20px;">
+    🚀 Open Smart Dashboard
+  </button>
+</a>
+
+
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: Arial;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100vh;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.8s ease, opacity 0.8s ease;
+            opacity: 0;
+        }
+
+        .active {
+            opacity: 1;
+            transform: translateX(0);
+            z-index: 1;
+        }
+
+        .next {
+            transform: translateX(100%);
+        }
+
+        .prev {
+            transform: translateX(-100%);
+        }
+
+        /* Buttons */
+        .btn {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            padding: 15px;
+            cursor: pointer;
+            font-size: 20px;
+            z-index: 2;
+        }
+
+        #prevBtn { left: 10px; }
+        #nextBtn { right: 10px; }
+
+        /* Dots */
+        .dots {
+            position: fixed;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            z-index: 2;
+        }
+
+        .dot {
+            height: 12px;
+            width: 12px;
+            margin: 5px;
+            background: gray;
+            display: inline-block;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .dot.activeDot {
+            background: white;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<!-- Slides -->
+<div class="slide active" style="background-image:url('slide1.jpg')"></div>
+<div class="slide next" style="background-image:url('slide2.jpg')"></div>
+<div class="slide next" style="background-image:url('slide3.jpg')"></div>
+<div class="slide next" style="background-image:url('slide4.jpg')"></div>
+<div class="slide next" style="background-image:url('slide5.jpg')"></div>
+<div class="slide next" style="background-image:url('slide6.jpg')"></div>
+<div class="slide next" style="background-image:url('slide7.jpg')"></div>
+<div class="slide next" style="background-image:url('slide8.jpg')"></div>
+<div class="slide next" style="background-image:url('slide9.jpg')"></div>
+<div class="slide">
+    <section class="end-slide">
+
+    <h1 class="fade">🙏 Thank You</h1>
+    <p class="fade delay1">Smart Garbage Detection System 🚮</p>
+    <p class="fade delay2 tagline">“Building smarter cities with technology 🚀”</p>
+
+    <!-- About Me -->
+    <div class="card fade delay3">
+        <h2>👨‍💻 About Me</h2>
+        <p>Yash Sharma</p>
+        <p>Diploma in Computer Science</p>
+        <p>Interest: IoT, Networking, Smart Systems</p>
+    </div>
+
+    <!-- Team -->
+    <div class="card fade delay4">
+        <h2>👥 Team Members</h2>
+        <p>1. Yash Sharma</p>
+        <p>2. Nitesh Chauhan</p>
+
+    </div>
+
+    <!-- Contact -->
+    <div class="card fade delay5">
+        <h2>📞 Contact</h2>
+        <p>Email: yashsharma7936@gmail.com</p>
+        <p>Phone: +91 9211697757</p>
+    </div>
+
+</section>
+
+<style>
+.end-slide {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #020617, #1e293b);
+    color: white;
+    text-align: center;
+    overflow: hidden;
+}
+
+/* Cards */
+.card {
+    background: rgba(255,255,255,0.05);
+    padding: 20px;
+    border-radius: 15px;
+    margin: 10px;
+    width: 300px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+/* Animations */
+.fade {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUp 1s forwards;
+}
+
+.delay1 { animation-delay: 0.5s; }
+.delay2 { animation-delay: 1s; }
+.delay3 { animation-delay: 1.5s; }
+.delay4 { animation-delay: 2s; }
+.delay5 { animation-delay: 2.5s; }
+
+@keyframes fadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Glow effect */
+h1 {
+    font-size: 50px;
+    animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+    from { text-shadow: 0 0 10px #fff; }
+    to { text-shadow: 0 0 25px #38bdf8; }
+}
+
+.tagline {
+    color: #94a3b8;
+    margin-bottom: 20px;
+}
+</style>
+
+</div>
+
+
+
+<!-- Buttons -->
+<button id="prevBtn" class="btn">❮</button>
+<button id="nextBtn" class="btn">❯</button>
+
+<!-- Dots -->
+<div class="dots" id="dots"></div>
+
+<script>
+let slides = document.querySelectorAll(".slide");
+let current = 0;
+let dotsContainer = document.getElementById("dots");
+
+// Create dots
+slides.forEach((_, i) => {
+    let dot = document.createElement("span");
+    dot.classList.add("dot");
+    if(i === 0) dot.classList.add("activeDot");
+    dot.addEventListener("click", () => goToSlide(i));
+    dotsContainer.appendChild(dot);
+});
+
+function updateSlides() {
+    slides.forEach((slide, i) => {
+        slide.classList.remove("active", "prev", "next");
+
+        if(i === current) slide.classList.add("active");
+        else if(i < current) slide.classList.add("prev");
+        else slide.classList.add("next");
+    });
+
+    document.querySelectorAll(".dot").forEach((dot, i) => {
+        dot.classList.toggle("activeDot", i === current);
+    });
+}
+
+function nextSlide() {
+    current = (current + 1) % slides.length;
+    updateSlides();
+}
+
+function prevSlide() {
+    current = (current - 1 + slides.length) % slides.length;
+    updateSlides();
+}
+
+function goToSlide(index) {
+    current = index;
+    updateSlides();
+}
+
+// Button controls
+document.getElementById("nextBtn").onclick = nextSlide;
+document.getElementById("prevBtn").onclick = prevSlide;
+
+// Keyboard control
+document.addEventListener("keydown", (e) => {
+    if(e.key === "ArrowRight") nextSlide();
+    if(e.key === "ArrowLeft") prevSlide();
+});
+
+// Auto slide (optional)
+setInterval(nextSlide, 5000);
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Live Garbage Monitoring</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 20px;
+        }
+
+        #chartContainer {
+            width: 80%;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        #status {
+            font-size: 24px;
+            margin: 20px;
+            font-weight: bold;
+        }
+
+        #alertBox {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: red;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<h1>🚮 Live Garbage Monitoring System</h1>
+
+<div id="status">🟢 Bin Empty</div>
+
+<div id="chartContainer">
+    <canvas id="myChart"></canvas>
+</div>
+
+<button onclick="goBack()">⬅ Back to Slides</button>
+
+<div id="alertBox">🚨 Bin Full Alert!</div>
+
+<audio id="alarm" src="https://www.soundjay.com/button/beep-07.wav"></audio>
+
+<script>
+let ctx = document.getElementById("myChart").getContext("2d");
+
+let data = [];
+let labels = [];
+
+let chart = new Chart(ctx, {
+    type: "line",
+    data: {
+        labels: labels,
+        datasets: [{
+            label: "Garbage Level (%)",
+            data: data,
+            borderWidth: 2
+        }]
+    }
+});
+
+let level = 10;
+
+setInterval(() => {
+
+    level += Math.random() * 15;
+
+    if(level > 100) level = 5;
+
+    data.push(level);
+    labels.push("");
+
+    if(data.length > 12){
+        data.shift();
+        labels.shift();
+    }
+
+    chart.update();
+
+    // STATUS TEXT
+    let statusText = document.getElementById("status");
+
+    if(level <= 30){
+        statusText.innerHTML = "🟢 Bin Empty";
+    }
+    else if(level <= 70){
+        statusText.innerHTML = "🟡 Bin Half Full";
+    }
+    else{
+        statusText.innerHTML = "🔴 Bin Full";
+        document.getElementById("alertBox").style.display = "block";
+        document.getElementById("alarm").play();
+    }
+
+    if(level < 70){
+        document.getElementById("alertBox").style.display = "none";
+    }
+
+}, 2000);
+
+// Back button
+function goBack(){
+    window.location.href = "index1.html";
+}
+</script>
+
+</body>
+</html>
